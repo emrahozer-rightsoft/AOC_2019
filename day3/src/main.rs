@@ -38,24 +38,15 @@ fn calculate_stops(directions: &Vec<Direction>, stops: &mut HashSet<Point>) {
     let mut pos = Point { x: 0, y: 0 };
     for d in directions {
         match d {
-            Direction::X(d_x) => {
-                for _i in 0..d_x.abs().to_owned() {
-                    if *d_x < 0 {
-                        pos.x -= 1;
-                    } else {
-                        pos.x += 1;
-                    }
-
+            Direction::X(d_x, direction) => {
+                for _i in 0..d_x.to_owned() {
+                    pos.x += direction;
                     stops.insert(pos);
                 }
             }
-            Direction::Y(d_y) => {
-                for _i in 0..d_y.abs().to_owned() {
-                    if *d_y < 0 {
-                        pos.y -= 1;
-                    } else {
-                        pos.y += 1;
-                    }
+            Direction::Y(d_y, direction) => {
+                for _i in 0..d_y.to_owned() {
+                    pos.y += direction;
                     stops.insert(pos);
                 }
             }
@@ -67,21 +58,21 @@ fn calculate_stops(directions: &Vec<Direction>, stops: &mut HashSet<Point>) {
 fn parse(s: &str) -> Direction {
     let direction_char = s.chars().next().unwrap();
     //get the remaining characters
-    let distance = s[1..].parse::<i64>().unwrap();
+    let distance = s[1..].parse::<u64>().unwrap();
     //return
     match direction_char {
-        'D' => Direction::Y(-distance),
-        'U' => Direction::Y(distance),
-        'L' => Direction::X(-distance),
-        'R' => Direction::X(distance),
+        'D' => Direction::Y(distance, -1),
+        'U' => Direction::Y(distance, 1),
+        'L' => Direction::X(distance, -1),
+        'R' => Direction::X(distance, 1),
         _ => Direction::None,
     }
 }
 
 #[derive(Debug)]
 enum Direction {
-    Y(i64),
-    X(i64),
+    Y(u64, i64),
+    X(u64, i64),
     None,
 }
 
